@@ -36,10 +36,17 @@ sveltekit支持编译静态资源，只需将svelte.config.js中的`adapter-auto
 ** 云端指标 **  
 本项目原生支持云端指标加载和显示，后端需提供`/kline/all_inds`和`/kline/calc_ind`接口，具体参数请参考`src/lib/indicators/cloudInds.ts`
 
+** 单页面多K线 **  
+本项目未使用全局store，故理论上支持多窗体，但尚未测试，请自行测试，如有问题请提issue
+
 ## TODO
 * 覆盖物从localstorage中恢复
 * textBox多行文本边界计算不正确
 * 滚动条样式未全局生效
+
+## 联系我
+请加[KlineChart](https://klinecharts.com/)作者微信，进入微信群，@火木；
+或[发邮件](mailto:anyongjin163@163.com)
 
 # sv
 
