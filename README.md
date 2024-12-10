@@ -9,8 +9,8 @@
 
 ## 开始预览
 ```bash
-yarn install
-yarn dev
+npm install
+npm run dev
 ```
 
 ## 开发笔记
