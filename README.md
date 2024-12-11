@@ -24,24 +24,22 @@ m.hello()
 m['hello']()
 ```
 
-** 注册新指标 **  
+**注册新指标**  
 在 src/lib/coms.ts 中添加新指标的字段和默认参数。
 
-** 编译为静态资源 **  
+**编译为静态资源**  
 sveltekit支持编译静态资源，只需将svelte.config.js中的`adapter-auto`改为`adapter-static`，然后执行`npm run build`，即可在dist目录下生成静态资源。
 
-** 数据来源  **  
+**数据来源**  
 为演示需要，本项目固定使用KlineChart的假数据，如需使用真实数据，请在src/lib/mydatafeed.ts中取消注释改为自己的接口
 
-** 云端指标 **  
+**云端指标**  
 本项目原生支持云端指标加载和显示，后端需提供`/kline/all_inds`和`/kline/calc_ind`接口，具体参数请参考`src/lib/indicators/cloudInds.ts`
 
-** 单页面多K线 **  
+**单页面多K线**  
 本项目未使用全局store，故理论上支持多窗体，但尚未测试，请自行测试，如有问题请提issue
 
 ## TODO
-* 覆盖物从localstorage中恢复
-* textBox多行文本边界计算不正确
 * 滚动条样式未全局生效
 
 ## 联系我
