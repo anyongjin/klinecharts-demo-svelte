@@ -12,6 +12,8 @@ import type {Nullable} from 'klinecharts';
 import * as m from '$lib/paraglide/messages.js'
 import {derived} from 'svelte/store';
 import type {ChartCtx} from './chart';
+import _ from 'lodash';
+import { overlayMap } from './overlays'
 
 let popoverKey = $state('');
 let modeIcon = $state('weakMagnet')
@@ -103,36 +105,63 @@ function clickPopoverKey(val: string){
 
 export function addOverlay(data: any){
   let moved = false;
+  const overlayClass = overlayMap[data.name] ?? {}
   const defData = {
     groupId: GROUP_ID,
     onDrawEnd: (event: OverlayEvent) => {
+      if(overlayClass.onDrawEnd){
+        overlayClass.onDrawEnd(event)
+      }
       editOverlay(event.overlay)
       return true
     },
     onPressedMoving: (event: OverlayEvent) => {
+      if(overlayClass.onPressedMoving){
+        overlayClass.onPressedMoving(event)
+      }
       moved = true;
       return false
     },
     onPressedMoveEnd: (event: OverlayEvent) => {
+      if(overlayClass.onPressedMoveEnd){
+        overlayClass.onPressedMoveEnd(event)
+      }
       if(!moved)return true
       moved = false
       editOverlay(event.overlay)
       return true
     },
     onSelected: (event: OverlayEvent) => {
+      if(overlayClass.onSelected){
+        overlayClass.onSelected(event)
+      }
       selectDraw = event.overlay.id
       return true;
     },
     onDeselected: (event: OverlayEvent) => {
+      if(overlayClass.onDeselected){
+        overlayClass.onDeselected(event)
+      }
       selectDraw = ''
       return true;
     },
     onRemoved: (event: OverlayEvent) => {
+      if(overlayClass.onRemoved){
+        overlayClass.onRemoved(event)
+      }
       delete $overlays[event.overlay.id]
       return true
     }
   }
-  const layId = $chart?.createOverlay({...defData, ...data})
+  // 合并时保留原有的事件处理器
+  const layId = $chart?.createOverlay(_.mergeWith({}, defData, data, (objValue, srcValue, key) => {
+    if (key.startsWith('on') && objValue && srcValue) {
+      return (event: OverlayEvent) => {
+        srcValue(event)
+        return objValue(event)
+      }
+    }
+  }))
   if(layId){
     if(Array.isArray(layId)){
       hisLays.push(...(layId as string[]))

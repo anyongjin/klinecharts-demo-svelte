@@ -47,7 +47,6 @@ function getIntervalText(interval: number){
 const ruler: OverlayTemplate = {
   name: 'ruler',
   totalStep: 3,
-  lock: true,
   needDefaultPointFigure: true,
   needDefaultXAxisFigure: true,
   needDefaultYAxisFigure: true,
@@ -55,6 +54,13 @@ const ruler: OverlayTemplate = {
     polygon: {
       color: 'rgba(22, 119, 255, 0.15)'
     }
+  },
+  onDeselected: (event) => {
+    // 失去焦点时移除该overlay
+    event.chart?.removeOverlay({
+      id: event.overlay.id
+    })
+    return true
   },
   createPointFigures: ({ chart, coordinates, overlay, yAxis }) => {
     const precision = getPrecision(chart, overlay, yAxis)

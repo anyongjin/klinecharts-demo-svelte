@@ -100,35 +100,6 @@ function drawRect (ctx: CanvasRenderingContext2D, attrs: RectAttrs | RectAttrs[]
   }
 }
 
-/*
-复制自KlineCharts的text.ts，因其不再导出，所以复制过来
-*/
-function drawText (ctx: CanvasRenderingContext2D, attrs: TextAttrs | TextAttrs[], styles: Partial<TextStyle>): void {
-  let texts: TextAttrs[] = []
-  texts = texts.concat(attrs)
-  const {
-    color = 'currentColor',
-    size = 12,
-    family,
-    weight,
-    paddingLeft = 0,
-    paddingTop = 0,
-    paddingRight = 0
-  } = styles
-  const rects = texts.map(text => getTextRect(text, styles))
-  drawRect(ctx, rects, { ...styles, color: styles.backgroundColor })
-
-  ctx.textAlign = 'left'
-  ctx.textBaseline = 'top'
-  ctx.font = createFont(size, weight, family)
-  ctx.fillStyle = color
-
-  texts.forEach((text, index) => {
-    const rect = rects[index]
-    ctx.fillText(text.text, rect.x + paddingLeft, rect.y + paddingTop, rect.width - paddingLeft - paddingRight)
-  })
-}
-
 export function drawRectText (ctx: CanvasRenderingContext2D, attrs: TextAttrs, styles: Partial<TextStyle>): void {
   const { text } = attrs
   const {
@@ -136,7 +107,8 @@ export function drawRectText (ctx: CanvasRenderingContext2D, attrs: TextAttrs, s
     family,
     weight,
     paddingLeft = 0,
-    paddingTop = 0
+    paddingTop = 0,
+    paddingRight = 0
   } = styles
   const lines = text.split('\n')
 
@@ -149,7 +121,12 @@ export function drawRectText (ctx: CanvasRenderingContext2D, attrs: TextAttrs, s
   let curY = rect.y + paddingTop
   lines.forEach((lineText, index) => {
     const startX = getRectStartX(attrs, styles, lineWidths[index]) + paddingLeft
-    drawText(ctx, { ...attrs, align: 'left', baseline: 'top', x: startX, y: curY, text: lineText }, styles)
+    // 使用单行文本绘制，避免重复的背景
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'top'
+    ctx.font = createFont(size, weight, family)
+    ctx.fillStyle = styles.color || 'currentColor'
+    ctx.fillText(lineText, startX, curY, rect.width - paddingLeft - paddingRight)
     curY += lineHeight
   })
 }

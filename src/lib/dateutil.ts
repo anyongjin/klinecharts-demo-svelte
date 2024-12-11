@@ -155,15 +155,6 @@ export function adjustFromTo(period: Period, toTimestamp: number, count: number)
       from = new Date(`${fromDate.getFullYear()}-${fromDate.getMonth() + 1}-01`).getTime()
       break
     }
-    case 'year': {
-      const date = new Date(to)
-      const year = date.getFullYear()
-      to = new Date(`${year}-01-01`).getTime()
-      from = count * period.multiplier * 365 * 24 * 60 * 60 * 1000
-      const fromDate = new Date(from)
-      from = new Date(`${fromDate.getFullYear()}-01-01`).getTime()
-      break
-    }
   }
   return [from, to]
 }
