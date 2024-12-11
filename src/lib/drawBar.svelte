@@ -6,7 +6,6 @@ import type { Chart } from 'klinecharts'
 import {ChartSave} from './chart';
 import type {Writable} from 'svelte/store';
 import {persisted} from 'svelte-persisted-store';
-import {onMount} from 'svelte';
 import KlineIcon from './icon.svelte';
 import type {Nullable} from 'klinecharts';
 import * as m from '$lib/paraglide/messages.js'
@@ -30,6 +29,11 @@ const ctx = getContext('ctx') as Writable<ChartCtx>
 const chart = getContext('chart') as Writable<Nullable<Chart>>
 const overlays = persisted<Record<string, Record<string, any>>>($save.key + '_overlays', {})
 
+function getOverlayKey(overlayId: string): string {
+  const sym = $save.symbol;
+  const symbol = sym.shortName ?? sym.name ?? sym.ticker;
+  return `${symbol}_${$save.period.timeframe}_${overlayId}`
+}
 
 const singleLineOpts = [
   { key: 'segment', text: 'segment' },
@@ -89,12 +93,6 @@ const modes = $state([
   { key: 'strongMagnet', text: 'strongMagnet' }
 ])
 
-onMount(() => {
-  Object.keys($overlays).forEach(k => {
-    addOverlay($overlays[k])
-  })
-})
-
 function clickPopoverKey(val: string){
   if (popoverKey == val){
     popoverKey = ""
@@ -149,7 +147,10 @@ export function addOverlay(data: any){
       if(overlayClass.onRemoved){
         overlayClass.onRemoved(event)
       }
-      delete $overlays[event.overlay.id]
+      overlays.update(ol => {
+        delete ol[getOverlayKey(event.overlay.id)]
+        return ol
+      })
       return true
     }
   }
@@ -230,13 +231,26 @@ function editOverlay(overlay: any){
   if(overlay.groupId !== GROUP_ID)return
   const keys = ['extendData', 'groupId', 'id', 'lock', 'mode', 'name', 'paneId', 'points', 'styles',
     'totalStep', 'visible', 'zLevel']
-  const oid = overlay['id'] as string
-  $overlays[oid] = Object.fromEntries(keys.map(k => [k, overlay[k]]))
+  const oid = getOverlayKey(overlay['id'])
+  overlays.update(ol => {
+    ol[oid] = Object.fromEntries(keys.map(k => [k, overlay[k]]))
+    return ol
+  })
 }
 
 const clickChart = derived(ctx, ($ctx) => $ctx.clickChart);
 clickChart.subscribe(() => {
   popoverKey = ''
+})
+
+const cloudIndLoaded = derived(ctx, ($ctx) => $ctx.cloudIndLoaded);
+cloudIndLoaded.subscribe(() => {
+  const currentPrefix = getOverlayKey('')
+  Object.entries($overlays).forEach(([key, v]) => {
+    if (key.startsWith(currentPrefix)) {
+      addOverlay(v)
+    }
+  })
 })
 </script>
 
