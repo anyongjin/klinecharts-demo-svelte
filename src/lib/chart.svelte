@@ -96,6 +96,7 @@
     })
     let chartObj = $chart!;
     chartObj.setLoadMoreDataCallback(({type, data, callback}) => {
+      if($ctx.loadingKLine)return
       $ctx.loadingKLine = true
       let from = 0, to = 0;
       if (!!data){
