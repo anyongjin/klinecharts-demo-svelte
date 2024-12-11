@@ -1,5 +1,5 @@
 import type {IndicatorTemplate} from 'klinecharts';
-import {postApi} from "$lib/netio";
+import {postApi} from "../../netio";
 import {drawCloudInd} from "./common";
 
 

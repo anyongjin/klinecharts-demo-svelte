@@ -10,17 +10,16 @@
   import indicators from './indicators';
   import MyDatafeed from './mydatafeed';
   import {onMount} from 'svelte';
-  import {adjustFromTo, makeFormatDate, setTimezone, getUTCStamp} from './dateutil';
+  import {adjustFromTo, makeFormatDate, setTimezone, getUTCStamp} from '../dateutil';
   import type {SymbolInfo, Period, BarArr} from './types';
   import DrawBar from './drawBar.svelte';
-  import {getApi} from './netio';
+  import {getApi} from '../netio';
   import {makeCloudInds} from './indicators/cloudInds';
   import {browser} from '$app/environment';
   import {getThemeStyles,GetNumberDotOffset, build_ohlcvs} from './coms';
-  import {tf_to_secs, toUTCStamp, getDateStr} from './dateutil';
+  import {tf_to_secs, toUTCStamp, getDateStr} from '../dateutil';
   import { createAlertStore } from '$lib/stores/alerts';
-	import Alert from '$lib/alert.svelte';
-  import { maxBarNum } from '$lib/config';
+	import Alert from '../alert.svelte';
   import { derived, writable } from 'svelte/store';
   import MenuBar from './menuBar.svelte';
   import type {Writable} from 'svelte/store';
@@ -39,6 +38,7 @@
 
   let {key='chart',customLoad=false} = $props()
 
+  const maxBarNum = 5000;
   const ctx = writable<ChartCtx>(new ChartCtx())
   let saveRaw = new ChartSave();
   saveRaw.key = key;

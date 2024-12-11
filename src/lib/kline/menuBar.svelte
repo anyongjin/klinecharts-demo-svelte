@@ -6,7 +6,7 @@
   import type {Writable} from 'svelte/store';
   import {ChartSave, ChartCtx} from './chart';
   import {GetNumberDotOffset, makePeriod} from './coms';
-  import {secs_to_tf} from './dateutil';
+  import {secs_to_tf} from '../dateutil';
   import { derived } from 'svelte/store';
   import * as m from '$lib/paraglide/messages.js';
   import Papa from 'papaparse';

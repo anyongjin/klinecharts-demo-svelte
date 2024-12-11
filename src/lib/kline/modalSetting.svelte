@@ -6,7 +6,7 @@
   import { ChartCtx, ChartSave } from "./chart";
   import type { Writable } from "svelte/store";
 	import _ from "lodash";
-  import { getThemeStyles } from "$lib/coms";
+  import { getThemeStyles } from "./coms";
   import { derived, writable } from "svelte/store";
   import { SvelteMap } from "svelte/reactivity"
   let { show = $bindable() } = $props();

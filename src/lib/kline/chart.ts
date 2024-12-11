@@ -1,4 +1,4 @@
-import { getUTCStamp, getDateStr } from "./dateutil";
+import { getUTCStamp, getDateStr } from "../dateutil";
 import type { Period, SymbolInfo, BanInd } from "./types";
 import * as m from '$lib/paraglide/messages.js'
 

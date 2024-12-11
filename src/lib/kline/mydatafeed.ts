@@ -1,5 +1,5 @@
 import type {Datafeed, SymbolInfo, BarArr, DatafeedWatchCallback, KData, GetKlineArgs} from './types';
-import {getApi} from "./netio";
+import {getApi} from "../netio";
 
 export default class MyDatafeed implements Datafeed {
 

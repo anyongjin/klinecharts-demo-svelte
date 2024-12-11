@@ -1,1 +1,0 @@
-export const maxBarNum = 5000;

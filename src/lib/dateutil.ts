@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
-import {type Period} from "./types";
+import {type Period} from "./kline/types";
 import * as kc from 'klinecharts';
 const FormatDateType = kc.FormatDateType
 export const formatDate = kc.utils.formatDate

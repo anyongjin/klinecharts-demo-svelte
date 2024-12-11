@@ -4,7 +4,7 @@
   import { getContext } from "svelte";
   import { ChartSave } from "./chart";
   import type { Writable } from "svelte/store";
-  import { getTimezoneSelectOptions} from "./dateutil";
+  import { getTimezoneSelectOptions} from "../dateutil";
 
   let { show = $bindable() } = $props();
   

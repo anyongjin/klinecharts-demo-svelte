@@ -1,7 +1,7 @@
 import * as kc from 'klinecharts';
 import type {CandleTooltipCustomCallbackData, CandleStyle} from 'klinecharts';
 import type {BarArr, Period, Timespan} from "./types";
-import {tf_to_secs, formatDate, dateTimeFormat} from "./dateutil";
+import {tf_to_secs, formatDate, dateTimeFormat} from "../dateutil";
 import * as m from '$lib/paraglide/messages.js'
 
 
