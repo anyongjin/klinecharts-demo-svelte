@@ -50,13 +50,14 @@
       calcParams: result
     }, $ctx.editPaneId);
 
-    if ($save) {
-      $save.saveInds[`${$ctx.editPaneId}_${$ctx.editIndName}`] = {
-          name: $ctx.editIndName,
+    save.update(s => {
+      s.saveInds[`${$ctx.editPaneId}_${$ctx.editIndName}`] = {
+        name: $ctx.editIndName,
         params: result,
         pane_id: $ctx.editPaneId
       };
-    }
+      return s
+    })
   }
 
 </script>

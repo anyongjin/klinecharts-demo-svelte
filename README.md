@@ -14,10 +14,10 @@ npm run dev
 ```
 
 ## 开发笔记
-** 国际化 **  
+**国际化**  
 使用inlang的国际化[插件](https://inlang.com/m/dxnzrydw/paraglide-sveltekit-i18n/getting-started)
 1. 在 project.inlang/settings.json 中添加语言标签，并在 messages 文件夹下添加语言文件。
-5. 在需要使用语言标签的地方，使用:
+2. 在需要使用语言标签的地方，使用:
 ```typescript
 import * as m from '$lib/paraglide/messages.js'
 m.hello()

@@ -18,7 +18,7 @@
   import {browser} from '$app/environment';
   import {getThemeStyles,GetNumberDotOffset, build_ohlcvs} from './coms';
   import {tf_to_secs, toUTCStamp, getDateStr} from '../dateutil';
-  import { createAlertStore } from '$lib/stores/alerts';
+  import { createAlertStore } from '../stores/alerts';
 	import Alert from '../alert.svelte';
   import { derived, writable } from 'svelte/store';
   import MenuBar from './menuBar.svelte';
@@ -29,24 +29,31 @@
   const datafeed = new MyDatafeed()
   overlays.forEach(o => kc.registerOverlay(o))
   figures.forEach(f => kc.registerFigure(f))
-  indicators.forEach(o => {
+  indicators.forEach((o: any) => {
     if(o.extendData == 'datafeed'){
       o.extendData = datafeed
     }
     kc.registerIndicator(o)
   })
 
-  let {key='chart',customLoad=false} = $props()
+  let {
+    ctx = writable<ChartCtx>(new ChartCtx()),
+    save = persisted('chart', new ChartSave()),
+    customLoad=false,
+  }: {
+    ctx: Writable<ChartCtx>,
+    save: Writable<ChartSave>,
+    customLoad?: boolean
+  } = $props()
 
   const maxBarNum = 5000;
-  const ctx = writable<ChartCtx>(new ChartCtx())
-  let saveRaw = new ChartSave();
-  saveRaw.key = key;
-  const save = persisted(key, saveRaw)
+  if($save.key){
+    $save.key = 'chart'
+  }
 
   let chartRef: HTMLElement
   let drawBarRef = $state<DrawBar>()
-  let chart: Writable<Nullable<kc.Chart>> = writable(null)
+  const chart: Writable<Nullable<kc.Chart>> = writable(null)
   const batchNum = 500;
   const alerts = createAlertStore();
   
@@ -143,11 +150,17 @@
     $ctx.loadingPairs = true;
     const symbols = await datafeed.getSymbols();
     $save.allSymbols = symbols;
-    console.log('allExgs', $save.allExgs)
+    const exgs = new Set<string>();
     symbols.forEach(s => {
       if (s.exchange){
-        $save.allExgs.add(s.exchange)
+        exgs.add(s.exchange)
       }
+    })
+    save.update(s => {
+      exgs.forEach(e => {
+        s.allExgs.add(e)
+      })
+      return s
     })
     $ctx.loadingPairs = false;
   }
@@ -279,12 +292,16 @@
     }
   })
 
+  export function getChart(): Nullable<kc.Chart>{
+    return $chart
+  }
+  
 </script>
 
 <div class="kline-main" data-theme="{$save.theme}" onclick={() => $ctx.clickChart += 1}>
   <div class="alerts-container">
     {#each $alerts as alert (alert.id)}
-      <Alert type={alert.type} text={alert.text} id={alert.id} />
+      <Alert type={alert.type} text={alert.text} />
     {/each}
   </div>
   <MenuBar customLoad={customLoad}/>

@@ -12,7 +12,7 @@
 	<!-- 添加alerts显示区域 -->
 	<div class="alerts-container">
 		{#each $alerts as alert (alert.id)}
-			<Alert type={alert.type} text={alert.text} id={alert.id} />
+			<Alert type={alert.type} text={alert.text} />
 		{/each}
 	</div>
 	{@render children()}

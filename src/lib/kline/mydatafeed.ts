@@ -83,7 +83,7 @@ export default class MyDatafeed implements Datafeed {
 
   subscribe(symbol: SymbolInfo, callback: DatafeedWatchCallback): void {
     if (this._prevSymbol && this._prevSymbol.ticker === symbol.ticker) return
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
     let ws_url = `${protocol}://${location.host}/api`
     this._prevSymbol = symbol
     this._ws?.close()

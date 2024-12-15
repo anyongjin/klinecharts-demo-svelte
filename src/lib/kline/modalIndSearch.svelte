@@ -73,15 +73,19 @@
     if(!ind_id)return null
     const pane_id = paneOptions?.id ?? ''
     const ind = {name, pane_id, params: calcParams}
-    if($save){
-      $save.saveInds[`${pane_id}_${name}`] = ind;
-    }
+    save.update(s => {
+      s.saveInds[`${pane_id}_${name}`] = ind;
+      return s
+    })
     return ind
   }
   
   export function delInd(paneId: string, name: string){
     $chart?.removeIndicator({paneId, name})
-    delete $save.saveInds[`${paneId}_${name}`]
+    save.update(s => {
+      delete s.saveInds[`${paneId}_${name}`]
+      return s
+    })
   }
 
   const cloudIndLoaded = derived(ctx, ($ctx) => $ctx.cloudIndLoaded);
